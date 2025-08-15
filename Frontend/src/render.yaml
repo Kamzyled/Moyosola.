@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: ai-project-generator
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd backend && python app.py
+    plan: free
