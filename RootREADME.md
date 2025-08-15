@@ -1,0 +1,3 @@
+- Start backend: (see backend/README.md)
+- Start frontend: cd frontend && npm install && npm run dev
+- In frontend, set VITE_BACKEND_URL to backend address
