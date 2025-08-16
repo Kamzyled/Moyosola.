@@ -107,10 +107,7 @@ def health():
 
 @app.route('/')
 def home():
-    return """
-    """
-@app.route('/health')
-def health():
+    return ""
     return jsonify({'status': 'ok', 'time': datetime.utcnow().isoformat()})
 @app.route('/')
 def home():
