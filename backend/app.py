@@ -105,7 +105,13 @@ def generate():
 @app.route('/health')
 def health():
     return jsonify({'status': 'ok', 'time': datetime.utcnow().isoformat()})
-
+@app.route('/')
+def home():
+    return """
+    <h1>🚀 AI Project Generator</h1>
+    <p>Use the <code>/generate</code> endpoint to create your project.</p>
+    <p>Health check: <a href='/health'>/health</a></p>
+    """
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
