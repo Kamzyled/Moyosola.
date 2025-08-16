@@ -109,8 +109,6 @@ def health():
 def home():
     return ""
     return jsonify({'status': 'ok', 'time': datetime.utcnow().isoformat()})
-@app.route('/')
-def home():
     return ""
 if __name__ == "__main__":
     import os
