@@ -101,7 +101,68 @@ def generate():
                 zf.write(full, arcname)
 
     return send_file(zip_path, as_attachment=True, download_name=f"{project_name}.zip")
+@app.route('/health')
+def health():
+    return jsonify({'status': 'ok', 'time': datetime.utcnow().isoformat()})
 
+@app.route('/')
+def home():
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>AI Project Generator</title>
+        <style>
+            body { font-family: Arial, sans-serif; background: #f9fafc; text-align: center; padding: 50px; }
+            h1 { color: #333; }
+            p { color: #555; }
+            input, textarea, button { padding: 10px; margin: 10px; width: 80%; max-width: 500px; }
+            button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+            button:hover { background: #45a049; }
+            .container { max-width: 600px; margin: auto; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🚀 AI Project Generator</h1>
+            <p>Enter your project idea below, and we'll create a downloadable zip for you.</p>
+            <textarea id="prompt" rows="4" placeholder="Describe your project..."></textarea><br>
+            <input id="name" type="text" placeholder="Project name (optional)" /><br>
+            <button onclick="generateProject()">Generate Project</button>
+            <p id="status"></p>
+        </div>
+
+        <script>
+            async function generateProject() {
+                const prompt = document.getElementById('prompt').value;
+                const projectName = document.getElementById('name').value || "generated_project";
+                document.getElementById('status').innerText = "Generating...";
+                
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt, project_name: projectName })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = projectName + '.zip';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    document.getElementById('status').innerText = "✅ Done! Your download should start.";
+                } else {
+                    const err = await response.json();
+                    document.getElementById('status').innerText = "❌ Error: " + err.error;
+                }
+            }
+        </script>
+    </body>
+    </html>
+    """
 @app.route('/health')
 def health():
     return jsonify({'status': 'ok', 'time': datetime.utcnow().isoformat()})
